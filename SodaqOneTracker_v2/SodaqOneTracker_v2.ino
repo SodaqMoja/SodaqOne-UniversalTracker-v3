@@ -250,8 +250,9 @@ void setup()
         DEBUG_STREAM.end();
     }
 
-    // disable the console stream if it is not disabled by the above
-    if ((long)&CONSOLE_STREAM != (long)&SerialUSB) {
+    // disable the console stream if it is not disabled by the above, 
+    // and only if it is different than the debug stream
+    if ((long)&CONSOLE_STREAM != (long)&SerialUSB && ((long)&CONSOLE_STREAM != (long)&DEBUG_STREAM)) {
         CONSOLE_STREAM.flush();
         CONSOLE_STREAM.end();
     }
