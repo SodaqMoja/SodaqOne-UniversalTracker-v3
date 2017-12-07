@@ -159,10 +159,6 @@ static void printBootUpMessage(Stream& stream);
 
 void setup()
 {
-    // Allow power to remain on
-    pinMode(ENABLE_PIN_IO, OUTPUT);
-    digitalWrite(ENABLE_PIN_IO, HIGH);
-
     lastResetCause = PM->RCAUSE.reg;
 
     // In case of reset (this is probably unnecessary)
