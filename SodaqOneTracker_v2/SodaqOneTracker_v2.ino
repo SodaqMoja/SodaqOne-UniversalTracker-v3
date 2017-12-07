@@ -215,6 +215,8 @@ void setup()
     initLora(LORA_INIT_SHOW_CONSOLE_MESSAGES, LORA_INIT_JOIN);
 
     accelerometer.disableMagnetometer();
+    pinMode(MAG_INT, OUTPUT);
+    digitalWrite(MAG_INT, LOW);
     if (params.getAccelerationPercentage() > 0) {
         initOnTheMove();
 
