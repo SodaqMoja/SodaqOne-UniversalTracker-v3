@@ -1,4 +1,4 @@
-# SODAQ ONE Tracker v2
+# SODAQ ONE Tracker v3
 
 Note: to be able to compile this application you need to add the right board file to your Arduino IDE.
 
@@ -12,7 +12,7 @@ After compiling the source code and uploading it to the board you will be able t
 
 Just open the Arduino Serial Monitor (at 9600 baud) and you will get this menu:
 ```
-** SodaqOne Universal Tracker v2 - 4.1 **
+** SodaqOne Universal Tracker v3 - 6.0.2 **
 LoRa HWEUI: 0004A30B00198185
  -> CPU reset by Software [64]
 
@@ -143,7 +143,7 @@ You can send the following configuration parameters back to the device (as part 
 
 ## License
 
-Copyright (c) 2016, SODAQ
+Copyright (c) 2017, SODAQ
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
