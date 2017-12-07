@@ -906,7 +906,7 @@ void setGpsActive(bool on)
         ublox.enable();
         ublox.flush();
 
-        sodaq_wdt_safe_delay(80);
+        sodaq_wdt_safe_delay(100);
 
         PortConfigurationDDC pcd;
 
