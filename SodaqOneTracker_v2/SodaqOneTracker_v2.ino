@@ -43,7 +43,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "GpsFixDataRecord.h"
 #include "OverTheAirConfigDataRecord.h"
 #include "GpsFixLiFoRingBuffer.h"
-#include "Sodaq_LIS3DE.h"
+#include "LSM303AGR.h"
 #include "LedColor.h"
 #include "Enums.h"
 #include "CayenneLPP.h"
@@ -99,7 +99,7 @@ RTCZero rtc;
 RTCTimer timer;
 UBlox ublox;
 Time time;
-Sodaq_LIS3DE accelerometer;
+LSM303AGR accelerometer;
 
 ReportDataRecord pendingReportDataRecord;
 bool isPendingReportDataRecordNew; // this is set to true only when pendingReportDataRecord is written by the delegate
@@ -217,6 +217,8 @@ void setup()
     }
 
     initLora(LORA_INIT_SHOW_CONSOLE_MESSAGES, LORA_INIT_JOIN);
+
+    accelerometer.disableMagnetometer();
     if (params.getAccelerationPercentage() > 0) {
         initOnTheMove();
 
@@ -515,18 +517,19 @@ void initOnTheMove()
         GCLK_CLKCTRL_GEN_GCLK1 |
         GCLK_CLKCTRL_CLKEN;
 
-    accelerometer.enable(true, 
-        Sodaq_LIS3DE::NormalLowPower10Hz, 
-        Sodaq_LIS3DE::XYZ, 
-        Sodaq_LIS3DE::Scale8g, 
+    accelerometer.enableAccelerometer(
+        LSM303AGR::LowPowerMode,
+        LSM303AGR::HrNormalLowPower10Hz, 
+        LSM303AGR::XYZ,
+        LSM303AGR::Scale8g,
         true);
     sodaq_wdt_safe_delay(100);
 
     accelerometer.enableInterrupt1(
-        Sodaq_LIS3DE::XHigh | Sodaq_LIS3DE::XLow | Sodaq_LIS3DE::YHigh | Sodaq_LIS3DE::YLow | Sodaq_LIS3DE::ZHigh | Sodaq_LIS3DE::ZLow,
+        LSM303AGR::XHigh | LSM303AGR::XLow | LSM303AGR::YHigh | LSM303AGR::YLow | LSM303AGR::ZHigh | LSM303AGR::ZLow,
         params.getAccelerationPercentage() * 8.0 / 100.0,
         params.getAccelerationDuration(),
-        Sodaq_LIS3DE::MovementRecognition);
+        LSM303AGR::MovementRecognition);
 }
 
 /**
@@ -971,11 +974,11 @@ void setAccelerometerTempSensorActive(bool on)
     }
 
     if (on) {
-        accelerometer.enable(false, Sodaq_LIS3DE::NormalLowPower100Hz, Sodaq_LIS3DE::XYZ, Sodaq_LIS3DE::Scale2g, true);
+        accelerometer.enableAccelerometer(LSM303AGR::LowPowerMode, LSM303AGR::HrNormalLowPower100Hz, LSM303AGR::XYZ, LSM303AGR::Scale2g, true);
         sodaq_wdt_safe_delay(30); // should be enough for initilization and 2 measurement periods
     }
     else {
-        accelerometer.disable();
+        accelerometer.disableAccelerometer();
     }
 }
 
