@@ -139,6 +139,7 @@ void initOnTheMove();
 void systemSleep();
 void runDefaultFixEvent(uint32_t now);
 void runAlternativeFixEvent(uint32_t now);
+void runOnTheMoveFixEvent(uint32_t now);
 void runLoraModuleSleepExtendEvent(uint32_t now);
 void setGpsActive(bool on);
 void setAccelerometerTempSensorActive(bool on);
