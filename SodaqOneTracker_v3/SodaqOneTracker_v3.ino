@@ -139,6 +139,7 @@ void initOnTheMove();
 void systemSleep();
 void runDefaultFixEvent(uint32_t now);
 void runAlternativeFixEvent(uint32_t now);
+void runOnTheMoveFixEvent(uint32_t now);
 void runLoraModuleSleepExtendEvent(uint32_t now);
 void setGpsActive(bool on);
 void setAccelerometerTempSensorActive(bool on);
@@ -163,10 +164,10 @@ void setup()
 
     // In case of reset (this is probably unnecessary)
     sodaq_wdt_disable();
-  
+
     // Setup the BOD33
     setupBOD33();
-    
+
     sodaq_wdt_enable(WDT_PERIOD_8X);
     sodaq_wdt_reset();
 
@@ -248,7 +249,7 @@ void setup()
         DEBUG_STREAM.end();
     }
 
-    // disable the console stream if it is not disabled by the above, 
+    // disable the console stream if it is not disabled by the above,
     // and only if it is different than the debug stream
     if ((long)&CONSOLE_STREAM != (long)&SerialUSB && ((long)&CONSOLE_STREAM != (long)&DEBUG_STREAM)) {
         CONSOLE_STREAM.flush();
@@ -518,7 +519,7 @@ void initOnTheMove()
 
     accelerometer.enableAccelerometer(
         LSM303AGR::LowPowerMode,
-        LSM303AGR::HrNormalLowPower10Hz, 
+        LSM303AGR::HrNormalLowPower10Hz,
         LSM303AGR::XYZ,
         LSM303AGR::Scale8g,
         true);
