@@ -102,7 +102,10 @@ typedef struct __attribute__((packed,aligned(1))) NavigationEngineSettings {
                                 // 7: airborne with <2g acceleration
                                 // 8: airborne with <4g acceleration
                                 // 9: wrist worn watch (not supported in protocol versions less than 18)
-    uint8_t  fixMode;           // Position Fixing Mode: 1: 2D only 2: 3D only 3: auto 2D/3D
+    uint8_t  fixMode;           // Position Fixing Mode:
+                                // 1: 2D only 
+                                // 2: 3D only 
+                                // 3: auto 2D/3D
     int32_t  fixedAlt;          // Fixed altitude in meters (mean sea level) for 2D fix mode
     uint32_t fixedAltVar;       // Fixed altitude variance for 2D mode in m^2.
     int8_t   minElev;           // Minimum Elevation in degrees for a GNSS satellite to be used in NAV
@@ -157,19 +160,20 @@ class UBlox {
 public:
     // NavigationPositionVelocityTimeSolution *NavPvt;
     // TimePulseParameters *CfgTp;
-    //
+
     UBlox   ();
     UBlox   (TwoWire& Wire,uint8_t address);
     void    CfgMsg(uint16_t Msg,uint8_t rate);
     int     available();
-    //
-    int     setPortConfigurationDDC(PortConfigurationDDC *pcd);
-    int     setTimePulseParameters(TimePulseParameters *Tpp);
-    //
-    bool    getTimePulseParameters(uint8_t tpIdx,TimePulseParameters* tpp);
+
     bool    getPortConfigurationDDC(PortConfigurationDDC* pcd);
+    int     setPortConfigurationDDC(PortConfigurationDDC *pcd);
+
+    bool    getTimePulseParameters(uint8_t tpIdx,TimePulseParameters* tpp);
+    int     setTimePulseParameters(TimePulseParameters *Tpp);
     
     bool    getNavEngineSettings(NavigationEngineSettings* navDynModel);
+    bool    setNavEngineSettings(NavigationEngineSettings* navDynModel);
 
     void    GetPeriodic();
     void    GetPeriodic(int bytes);
@@ -185,9 +189,9 @@ public:
     // Debug helper
     void    db_printf(const char *message,...);
 
-    //
     int     process(uint8_t);
     void    sendraw();
+
 private:
     int     send(uint8_t *buffer,int n);
     int     wait();

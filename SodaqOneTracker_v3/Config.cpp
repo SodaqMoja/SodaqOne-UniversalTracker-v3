@@ -78,6 +78,7 @@ void ConfigParams::reset()
     _alternativeFixToHours = 0;
     _alternativeFixToMinutes = 0;
     _gpsFixTimeout = 120;
+    _gpsDynModel = 0;
 
     memset(_devAddrOrEUI, 0x30, sizeof(_devAddrOrEUI) - 1);
     _devAddrOrEUI[sizeof(_devAddrOrEUI) - 1] = '\0';
@@ -142,6 +143,7 @@ static const Command args[] = {
     { "GPS Fix Timeout (sec)     ", "gft=", Command::set_uint16, Command::show_uint16, &params._gpsFixTimeout },
     { "Minimum sat count         ", "sat=", Command::set_uint8, Command::show_uint8, &params._gpsMinSatelliteCount },
     { "Num Coords to Upload      ", "num=", Command::set_uint8, Command::show_uint8, &params._coordinateUploadCount },
+    { "GPS dynamic model         ", "gdm=", Command::set_uint8, Command::show_uint8, &params._gpsDynModel },
     { "On-the-move Functionality ", 0,      0,                  Command::show_title, 0 },
     { "Acceleration% (100% = 8g) ", "acc=", Command::set_uint8, Command::show_uint8, &params._accelerationPercentage },
     { "Acceleration Duration     ", "acd=", Command::set_uint8, Command::show_uint8, &params._accelerationDuration },
@@ -263,6 +265,11 @@ bool ConfigParams::checkConfig(Stream& stream)
 
     if (_accelerationPercentage > 100) {
         stream.println("Acceleration% must not be more than 100");
+        fail = true;
+    }
+
+    if (_gpsDynModel > 8) {
+        stream.println("GPS Dynamic Model must not be more than 8");
         fail = true;
     }
 

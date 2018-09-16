@@ -272,6 +272,22 @@ bool UBlox::getNavEngineSettings(NavigationEngineSettings* navDynModel) {
     return this->wait(0x0624,sizeof(NavigationEngineSettings),navDynModel);
 }
 
+/*
+ * Sets the navigational engine settings.
+ * See "CFG-NAV5" in u-blox protocol description.
+ */
+bool UBlox::setNavEngineSettings(NavigationEngineSettings* navDynModel) {
+    // Warning: this overwrites the receive buffer.
+    payLoad_.buffer[0] = 0x06;                             // Class
+    payLoad_.buffer[1] = 0x24;                             // Id
+    payLoad_.buffer[2] = sizeof(NavigationEngineSettings); // Length LSB
+    payLoad_.buffer[3] = 0;                                // Length MSB
+    memcpy(&payLoad_.buffer[4],(uint8_t*)navDynModel,sizeof(NavigationEngineSettings));
+
+    (void) this->send(payLoad_.buffer,sizeof(NavigationEngineSettings)+4);
+    return this->wait();
+}
+
 /* 
  *  Sets the message rate.
  *  See "CFG-MSG" in u-blox protocol description.
