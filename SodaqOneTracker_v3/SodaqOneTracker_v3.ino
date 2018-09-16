@@ -939,8 +939,8 @@ void setGpsActive(bool on)
             return;
         }
 
-        ublox.CfgMsg(UBX_NAV_PVT, 1); // Navigation Position Velocity TimeSolution
-        ublox.funcNavPvt = delegateNavPvt;
+        sodaq_wdt_safe_delay(15);
+
 
         // Fetch the Navigation Engine Settings
         NavigationEngineSettings navSettings;
@@ -974,6 +974,11 @@ void setGpsActive(bool on)
             debugPrintln("ublox.setNavEngineSettings failed.");
             return;
         }
+
+        sodaq_wdt_safe_delay(15);
+
+        ublox.CfgMsg(UBX_NAV_PVT, 1); // Navigation Position Velocity TimeSolution
+        ublox.funcNavPvt = delegateNavPvt;
     }
     else {
         ublox.disable();
