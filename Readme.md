@@ -6,6 +6,8 @@ Go to File, Preferences and set the following URL for the additional board files
 
 http://downloads.sodaq.net/package_sodaq_samd_index.json
 
+Then open the "boards manager" and install the SODAQ SAMD Boards package. You can now select the SODAQ ONE as target board in the IDE.
+
 ##  Configuration Menu
 
 After compiling the source code and uploading it to the board you will be able to configure the board through a menu.

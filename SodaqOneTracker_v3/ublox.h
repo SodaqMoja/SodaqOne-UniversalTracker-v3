@@ -90,6 +90,47 @@ typedef struct __attribute__((packed,aligned(1))) TimePulseTimedata {
     uint8_t     reserved1;
 } TimePulseTimedata;
 
+typedef struct __attribute__((packed,aligned(1))) NavigationEngineSettings {
+    uint16_t mask;              // Parameters Bitmask. Only the masked parameters will be applied.
+    uint8_t  dynModel;          // Dynamic platform model:
+                                // 0: portable
+                                // 2: stationary
+                                // 3: pedestrian
+                                // 4: automotive
+                                // 5: sea
+                                // 6: airborne with <1g acceleration
+                                // 7: airborne with <2g acceleration
+                                // 8: airborne with <4g acceleration
+                                // 9: wrist worn watch (not supported in protocol versions less than 18)
+    uint8_t  fixMode;           // Position Fixing Mode: 1: 2D only 2: 3D only 3: auto 2D/3D
+    int32_t  fixedAlt;          // Fixed altitude in meters (mean sea level) for 2D fix mode
+    uint32_t fixedAltVar;       // Fixed altitude variance for 2D mode in m^2.
+    int8_t   minElev;           // Minimum Elevation in degrees for a GNSS satellite to be used in NAV
+    uint8_t  drLimit;           // Reserved
+    uint16_t pDop;              // Position DOP Mask to use
+    uint16_t tDop;              // Time DOP Mask to use
+    uint16_t pAcc;              // Position Accuracy Mask in meters
+    uint16_t tAcc;              // Time Accuracy Mask in meters
+    uint8_t  staticHoldThresh;  // Static hold threshold in cm/s
+    uint8_t  dgnssTimeout;      // DGNSS timeout in seconds
+    uint8_t  cnoThreshNumSats;  // Number of sattelites required to have C/NO above cnoThresh 
+                                // for a fix to be attempted
+    uint8_t  cnoThresh;         // C/N0 threshold for deciding whether to attempt a fix in dBHz
+    uint8_t  reserved1[2];      // 2 bytes reserved
+    uint16_t staticHoldMaxDist; // Static hold distance threshold before quitting static hold
+    uint8_t  utcStandard;       // UTC standard to be used:
+                                // 0: Automatic; receiver selects based on GNSS configuration 
+                                //    (see GNSS time bases).
+                                // 3: UTC as operated by the U.S. Naval Observatory (USNO); 
+                                //    derived from GPS time
+                                // 6: UTC as operated by the former Soviet Union; derived from 
+                                //    GLONASS time
+                                // 7: UTC as operated by the National Time Service Center,
+                                //    China; derived from BeiDou time
+                                //    (not supported in protocol versions less than 16).
+    uint8_t  reserved2[5];      // 5 bytes reserved
+} NavigationEngineSettings;
+
 enum Messages {
     UBX_NAV_PVT = 0x0107,
     UBX_TIM_TP  = 0x0d01,
@@ -127,6 +168,8 @@ public:
     //
     bool    getTimePulseParameters(uint8_t tpIdx,TimePulseParameters* tpp);
     bool    getPortConfigurationDDC(PortConfigurationDDC* pcd);
+    
+    bool    getNavEngineSettings(NavigationEngineSettings* navDynModel);
 
     void    GetPeriodic();
     void    GetPeriodic(int bytes);
