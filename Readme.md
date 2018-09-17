@@ -14,7 +14,7 @@ After compiling the source code and uploading it to the board you will be able t
 
 Just open the Arduino Serial Monitor (at 9600 baud) and you will get this menu:
 ```
-** SodaqOne Universal Tracker v3 - 6.0.2 **
+** SodaqOne Universal Tracker v3 - 6.0.0 **
 LoRa HWEUI: 0004A30B00198185
  -> CPU reset by Software [64]
 
@@ -36,6 +36,7 @@ GPS
   GPS Fix Timeout (sec)      (gft=): 120
   Minimum sat count          (sat=): 4
   Num Coords to Upload       (num=): 1
+  GPS dynamic model          (gdm=): 0
 
 On-the-move Functionality 
   Acceleration% (100% = 8g)  (acc=): 0
@@ -91,7 +92,17 @@ the best GPS fix found (if any) is used.
 
 For redundancy we could configure a repeat count. The value of the repeat count tells us to send the Lora frame an additional number of times (default 0) for redundancy.
 
-The Lora frame contains the following data. The minimum frame size is 21 bytes, the maximum frame size 51 bytes, depending on the number of coordinates we have configured to be sent.
+For special applications like high-altitude ballooning, the GPS might need to operate with a different dynamics model for making calculations. Use the `gdm=` operator to chose one of the following models:
+
+- **0: portable** (default) Applications with low acceleration, e.g. portable devices. Suitable for most situations.
+- **2: stationary** Used in timing applications (antenna must be stationary) or other stationary applications. Velocity restricted to 0 m/s. Zero dynamics assumed.
+- **3: pedestrian** Applications with low acceleration and speed, e.g. how a pedestrian would move. Low acceleration assumed.
+- **4: automotive** Used for applications with equivalent dynamics to those of a passenger car. Low vertical acceleration assumed.
+- **5: sea** Recommended for applications at sea, with zero vertical velocity. Zero vertical velocity assumed. Sea level assumed.
+- **6: airborne with <1g acceleration** Used for applications with a higher dynamic range and greater vertical acceleration than a passenger car. No 2D position fixes supported.
+- **7: airborne with <2g acceleration** Recommended for typical airborne environments. No 2D position fixes supported.
+- **8: airborne with <4g acceleration** Only recommended for extremely dynamic environments. No 2D position fixes supported.
+
 
 #### LoRa Connection
 
@@ -108,6 +119,8 @@ The firmware supports, except for the default and alternative fix intervals, a t
 
 
 #### LoRa Frame content
+
+The Lora frame contains the following data. The minimum frame size is 21 bytes, the maximum frame size 51 bytes, depending on the number of coordinates we have configured to be sent.
 
 | Description | Length |
 | --- | --- |
@@ -131,8 +144,6 @@ The firmware supports, except for the default and alternative fix intervals, a t
 #### Remote (over the air) re-configuration
 
 You can send the following configuration parameters back to the device (as part as the LoRaWAN class A communication protocol)
-
-
 
 | Description | Length |
 | --- | --- |
